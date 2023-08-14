@@ -8,15 +8,23 @@ then
     echo "zenity could not be found"
     exit
 fi
-
-#Check if curl is installed
+#
+##Check if curl is installed
 if ! command -v curl &> /dev/null
 then
     echo "curl could not be found"
     exit
 fi
 
+if ! command -v qrencode &> /dev/null
+then 
+	echo "qrencode not installed, please install qrencode "
+	exit
+fi
+
+
 #Select file to upload
+sudo apt install qrencode
 FILE=$(zenity --file-selection --title="Select file to upload")
 
 #Upload file
@@ -27,7 +35,7 @@ echo $URL | wl-copy
 
 #Show URL
 zenity --info --text="URL copied to clipboard: $URL"
-
+qrencode -s 9 -l H -o "/tmp/URL.png" "$URL"
 #Open URL in browser
-xdg-open $URL
+xdg-open URL.png
 
