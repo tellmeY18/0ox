@@ -1,8 +1,12 @@
-#Bash Script to share files via 0x0.st (https://0x0.st) and zenity to select files
-
 #!/bin/bash
 
-#Check if zenity is installed
+if cat /etc/os-release | grep -i "ID_LIKE" | grep -i "arch"; then
+    sudo pacman -Syy --noconfirm qrencode curl zenity 
+elif cat /etc/os-release | grep -i "ID_LIKE" | grep -i "debian"; then 
+    sudo apt-get update
+    sudo apt-get install -y curl qrencode zenity
+fi
+
 if ! command -v zenity &> /dev/null
 then
     echo "zenity could not be found"
@@ -22,9 +26,7 @@ then
 	exit
 fi
 
-
 #Select file to upload
-sudo apt install qrencode
 FILE=$(zenity --file-selection --title="Select file to upload")
 
 #Upload file
@@ -38,4 +40,3 @@ zenity --info --text="URL copied to clipboard: $URL"
 qrencode -s 9 -l H -o "/tmp/URL.png" "$URL"
 #Open URL in browser
 xdg-open URL.png
-
